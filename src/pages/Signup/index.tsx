@@ -1,28 +1,37 @@
-import { Link } from 'react-router-dom';
-import './auth.css';
+import { Link } from "react-router-dom";
+import "./auth.css";
+import { useState } from "react";
+import { authRepository } from "../../modules/auth/auth.repository";
 
 function Signup() {
+  const [name, setName] = useState("");
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+
+  const signup = async () => {
+    if (name == "" || email == "" || password == "") return;
+    const { user, token } = await authRepository.signup(name, email, password);
+  };
+
   return (
     <div className="signup-container">
       <div className="signup-form-container">
         <h1 className="signup-title">Sign up to continue</h1>
-        <p className="signup-subtitle">
-          Use your email or another service to continue
-        </p>
+        <p className="signup-subtitle">Use your email or another service to continue</p>
 
         <div>
           <div className="form-group">
-            <input type="text" placeholder="Full name" required />
+            <input type="text" placeholder="Full name" value={name} onChange={(e) => setName(e.target.value)} required />
           </div>
 
           <div className="form-group">
-            <input type="email" placeholder="Email" required />
+            <input type="email" placeholder="Email" value={email} onChange={(e) => setEmail(e.target.value)} required />
           </div>
 
           <div className="form-group">
-            <input type="password" placeholder="Password" required />
+            <input type="password" placeholder="Password" value={password} onChange={(e) => setPassword(e.target.value)} required />
           </div>
-          <button type="submit" className="continue-button">
+          <button type="submit" onClick={signup} disabled={name == "" || email == "" || password == ""} className="continue-button">
             Continue
           </button>
         </div>
