@@ -3,8 +3,31 @@ import Signup from "./pages/Signup";
 import Signin from "./pages/Signin";
 import CreateWorkspaceModal from "./pages/Home/WorkspaceSelector/CreateWorkspaceModal";
 import Home from "./pages/Home";
+import { useEffect, useState } from "react";
+import { authRepository } from "./modules/auth/auth.repository";
+import { useCurrentUseStore } from "./modules/auth/current-user.state";
 
 function App() {
+  const [isLoading, setIsLoading] = useState(true);
+  const { setCurrentUser } = useCurrentUseStore();
+
+  useEffect(() => {
+    fetchCurrentUser();
+  }, []);
+
+  const fetchCurrentUser = async () => {
+    try {
+      const user = await authRepository.getCurrentUser();
+      setCurrentUser(user);
+    } catch (error) {
+      console.log(error);
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  if (isLoading) return <div />;
+
   return (
     <BrowserRouter>
       <div>
